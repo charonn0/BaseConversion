@@ -6,26 +6,34 @@ Protected Module BaseConvert
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h21
+		Private Function DigitLookup(Digit As String, Base As Integer) As UInt64
+		  If UBound(BaseArray) = -1 Then BaseArray = Split("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/", "")
+		  If Base < 2 Or Base > UBound(BaseArray) Then Raise New TypeMismatchException
+		  
+		  If Base < 36 Then
+		    Return BaseArray.IndexOf(Digit)
+		    
+		  Else ' case sensitive
+		    For x As Integer = 0 To UBound(BaseArray)
+		      If StrComp(BaseArray(x), Digit, 1) = 0 Then Return x
+		    Next
+		  End If
+		  
+		  Raise New KeyNotFoundException
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h1
 		Protected Function FromBase(Value As String, FromBase As Integer) As UInt64
 		  ' Converts the value into base-10 using FromBase
-		  If UBound(BaseArray) = -1 Then UseExtensions = mUseExtensions
 		  If FromBase - 1 > UBound(BaseArray) Or FromBase < 2 Then Raise New OutOfBoundsException
+		  
 		  Dim Result As UInt64
 		  For i As UInt64 = 1 To Value.Len
-		    Dim addend As UInt64 
-		    Dim s As String = Value.Mid(i, 1)
-		    If mUseExtensions Then
-		      For x As Integer = 0 To UBound(BaseArray)
-		        If StrComp(BaseArray(x), s, 1) = 0 Then
-		          addend = x
-		          Exit For
-		        End If
-		      Next
-		    Else
-		      addend = BaseArray.IndexOf(s)
-		    End If
-		    Result = FromBase * Result + addend
+		    Dim digit As String = Value.Mid(i, 1) ' the encoded digit
+		    Dim addend As UInt64 = DigitLookup(digit, FromBase) ' its numeric value
+		    Result = FromBase * Result + addend 
 		  Next
 		  Return Result
 		End Function
@@ -44,9 +52,15 @@ Protected Module BaseConvert
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
+		Protected Function Str(Number As UInt64) As String
+		  Return ToBase(Number, 10)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
 		Protected Function ToBase(Value As UInt64, NewBase As Integer) As String
 		  ' Converts an UInt64 into a string representation of the number in NewBase
-		  If UBound(BaseArray) = -1 Then UseExtensions = mUseExtensions
+		  InitBase()
 		  If NewBase - 1 > UBound(BaseArray) Or NewBase < 2 Then Raise New OutOfBoundsException
 		  Dim digit() As String
 		  Do Until Value = 0
@@ -58,32 +72,31 @@ Protected Module BaseConvert
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h1
+		Protected Function Val(Data As String) As UInt64
+		  Select Case Left(Data, 2)
+		  Case "&b" ' binary
+		    Return FromBase(Right(Data, Data.Len - 2), 2)
+		  Case "&t" ' ternary
+		    Return FromBase(Right(Data, Data.Len - 2), 3)
+		  Case "&o" ' octal
+		    Return FromBase(Right(Data, Data.Len - 2), 8)
+		  Case "&d" ' decimal
+		    Return FromBase(Right(Data, Data.Len - 2), 10)
+		  Case "&h" ' hexadecimal
+		    Return FromBase(Right(Data, Data.Len - 2), 16)
+		  Case "&g" ' Hexatri*g*esimal
+		    Return FromBase(Right(Data, Data.Len - 2), 36)
+		  Else
+		    Return REALbasic.Val(Data)
+		  End Select
+		End Function
+	#tag EndMethod
+
 
 	#tag Property, Flags = &h21
 		Private BaseArray() As String
 	#tag EndProperty
-
-	#tag Property, Flags = &h21
-		Private mUseExtensions As Boolean = False
-	#tag EndProperty
-
-	#tag ComputedProperty, Flags = &h1
-		#tag Getter
-			Get
-			  return mUseExtensions
-			End Get
-		#tag EndGetter
-		#tag Setter
-			Set
-			  mUseExtensions = value
-			  BaseArray = Split("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/", "")
-			  If Not mUseExtensions Then ReDim BaseArray(61)
-			  
-			  
-			End Set
-		#tag EndSetter
-		Protected UseExtensions As Boolean
-	#tag EndComputedProperty
 
 
 	#tag ViewBehavior

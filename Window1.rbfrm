@@ -30,18 +30,18 @@ End
 #tag WindowCode
 	#tag Event
 		Sub Open()
-		  BaseConvert.UseExtensions = True
-		  Dim test As UInt64 = 1844674407370955161
-		  For i As UInt64 = 2 To 64
-		    Dim s As String = BaseConvert.ToBase(test, i)
-		    Dim s1 As UInt64 = BaseConvert.FromBase(s, i)
-		    If s1 <> test Then Break
-		    'If i = 2 And s <> Bin(test) Then Break
-		    'If i = 16 And s <> Hex(test) Then Break
-		    System.DebugLog("Converted " + Str(test) + " into: " + s + " using base-" + Str(i))
-		  Next
-		  Break
+		  'Dim test As UInt64 = 2^31 - 1
+		  'For i As UInt64 = 2 To 63
+		  'Dim s As String = BaseConvert.ToBase(test, i)
+		  'Dim s1 As UInt64 = BaseConvert.FromBase(s, i)
+		  'If s1 <> test Then Break
+		  'If i = 2 And s <> Bin(test) Then Break
+		  'If i = 16 And s <> Hex(test) Then Break
+		  'System.DebugLog("Converted " + Str(test) + " into: " + s + " using base-" + Str(i))
+		  'Next
+		  'Quit
 		  
+		  If BaseConvert.Str(12) = Str(12) Then MsgBox("OK")
 		End Sub
 	#tag EndEvent
 
