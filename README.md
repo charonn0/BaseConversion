@@ -8,4 +8,11 @@ For example, converting a numeric value into a hexadecimal (base-16) string:
   Dim hexstring As String = BaseConvert.ToBase(num, 16)
 ```
 
-All conversion are performed using UNsigned integers.
+All conversions are performed using UNsigned integers.
+
+##Extending Val()
+The BaseConvert.Val() method works like Realbasic.Val, with the addition of a few extra literals besides `&h`, `&o` and `&b`:
+
+* `&t`: Ternary/base-3
+* `&d`: Decimal/base-10
+* `&g`: Hexatrigesimal/base-36
