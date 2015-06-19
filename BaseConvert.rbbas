@@ -27,13 +27,13 @@ Protected Module BaseConvert
 	#tag Method, Flags = &h1
 		Protected Function FromBase(Value As String, FromBase As Integer) As UInt64
 		  ' Converts the value into base-10 using FromBase
+		  Call DigitLookup("0", 2)
 		  If FromBase - 1 > UBound(BaseArray) Or FromBase < 2 Then Raise New OutOfBoundsException
-		  
 		  Dim Result As UInt64
 		  For i As UInt64 = 1 To Value.Len
 		    Dim digit As String = Value.Mid(i, 1) ' the encoded digit
 		    Dim addend As UInt64 = DigitLookup(digit, FromBase) ' its numeric value
-		    Result = FromBase * Result + addend 
+		    Result = FromBase * Result + addend
 		  Next
 		  Return Result
 		End Function
@@ -60,7 +60,7 @@ Protected Module BaseConvert
 	#tag Method, Flags = &h1
 		Protected Function ToBase(Value As UInt64, NewBase As Integer) As String
 		  ' Converts an UInt64 into a string representation of the number in NewBase
-		  InitBase()
+		  Call DigitLookup("0", 2)
 		  If NewBase - 1 > UBound(BaseArray) Or NewBase < 2 Then Raise New OutOfBoundsException
 		  Dim digit() As String
 		  Do Until Value = 0
