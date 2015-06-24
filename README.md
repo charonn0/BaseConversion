@@ -11,7 +11,7 @@ For example, converting a numeric value into a hexadecimal (base-16) string:
 All conversions are performed using UNsigned integers.
 
 ##Extending Val()
-The BaseConvert.Val() method works like Realbasic.Val, with the addition of a few extra literals besides `&h`, `&o` and `&b`:
+The `BaseConvert.Val()` method works like `Realbasic.Val`, with the addition of a few extra literals besides `&h`, `&o` and `&b`:
 
 * `&t`: Ternary/base-3
 * `&d`: Decimal/base-10
