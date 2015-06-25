@@ -8,14 +8,18 @@ Protected Module BaseConvert
 
 	#tag Method, Flags = &h21
 		Private Function DigitLookup(Digit As String, Base As Integer) As UInt64
-		  If UBound(BaseArray) = -1 Then BaseArray = Split("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/", "")
-		  If Base < 2 Or Base > UBound(BaseArray) Then Raise New TypeMismatchException
+		  Dim bound As Integer = UBound(BaseArray)
+		  If bound = -1 Then 
+		    BaseArray = Split("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/", "")
+		    bound = UBound(BaseArray)
+		  End If
+		  If Base < 2 Or Base > bound Then Raise New TypeMismatchException
 		  
 		  If Base < 36 Then
 		    Return BaseArray.IndexOf(Digit)
 		    
 		  Else ' case sensitive
-		    For x As Integer = 0 To UBound(BaseArray)
+		    For x As Integer = 0 To bound
 		      If StrComp(BaseArray(x), Digit, 1) = 0 Then Return x
 		    Next
 		  End If
