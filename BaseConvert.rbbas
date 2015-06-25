@@ -52,8 +52,8 @@ Protected Module BaseConvert
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
-		Protected Function Str(Number As UInt64) As String
-		  Return ToBase(Number, 10)
+		Protected Function Str(Number As UInt64, NumericBase As Integer = 10) As String
+		  Return ToBase(Number, NumericBase)
 		End Function
 	#tag EndMethod
 
