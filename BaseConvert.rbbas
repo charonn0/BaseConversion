@@ -13,7 +13,7 @@ Protected Module BaseConvert
 		    BaseArray = Split("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/", "")
 		    bound = UBound(BaseArray)
 		  End If
-		  If Base < 2 Or Base > bound Then Raise New TypeMismatchException
+		  If Base < 2 Or Base - 1 > bound Then Raise New TypeMismatchException
 		  
 		  If Base < 36 Then
 		    Return BaseArray.IndexOf(Digit)
