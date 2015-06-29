@@ -40,6 +40,17 @@ Protected Module BaseConvert
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
+		Protected Function FromLiteral(Data As String) As UInt64
+		  Call DigitLookup("0", 2)
+		  Dim literal As String
+		  If Left(Data, 1) = "&" Then literal = Left(Data, 2)
+		  Data = Replace(Data, literal, "")
+		  Dim base As Integer = BaseArray.IndexOf(Right(literal, 1))
+		  Return FromBase(Data, base)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
 		Protected Function Hex(Number As UInt64) As String
 		  Return ToBase(Number, 16)
 		End Function
@@ -63,11 +74,11 @@ Protected Module BaseConvert
 		  Call DigitLookup("0", 2)
 		  If NewBase - 1 > UBound(BaseArray) Or NewBase < 2 Then Raise New OutOfBoundsException
 		  Dim digit() As String
-		  Do Until Value = 0
+		  Do
 		    Dim remainder As UInt64 = Value Mod NewBase
 		    Value = Value \ NewBase
 		    digit.Insert(0, BaseArray(remainder))
-		  Loop
+		  Loop Until Value = 0
 		  Return Join(digit, "")
 		End Function
 	#tag EndMethod
@@ -83,12 +94,12 @@ Protected Module BaseConvert
 		    Return FromBase(Right(Data, Data.Len - 2), 8)
 		  Case "&d" ' decimal
 		    Return FromBase(Right(Data, Data.Len - 2), 10)
-		  Case "&h" ' hexadecimal
+		  Case "&h", "&u" ' hexadecimal
 		    Return FromBase(Right(Data, Data.Len - 2), 16)
 		  Case "&g" ' Hexatri*g*esimal
 		    Return FromBase(Right(Data, Data.Len - 2), 36)
-		  Else
-		    Return REALbasic.Val(Data)
+		  Else ' assume base-10 with no literal
+		    Return FromBase(Data, 10)
 		  End Select
 		End Function
 	#tag EndMethod
