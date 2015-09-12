@@ -7,7 +7,7 @@ Protected Module BaseConvert
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Function DigitLookup(Digit As String, Base As Integer) As UInt64
+		Private Function DigitLookup(Digit As String, Base As Integer) As Integer
 		  Dim bound As Integer = UBound(BaseArray)
 		  If bound = -1 Then
 		    BaseArray = Split("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/", "")
@@ -29,12 +29,12 @@ Protected Module BaseConvert
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
-		Protected Function FromBase(Value As String, FromBase As Integer) As UInt64
+		Protected Function FromBase(Value As String, FromBase As UInt64) As UInt64
 		  ' Converts the value into base-10 using FromBase
 		  Call DigitLookup("0", 2)
 		  If FromBase - 1 > UBound(BaseArray) Or FromBase < 2 Then Raise New OutOfBoundsException
 		  Dim Result As UInt64
-		  For i As UInt64 = 1 To Value.Len
+		  For i As Integer = 1 To Value.Len
 		    Dim digit As String = Value.Mid(i, 1) ' the encoded digit
 		    Dim addend As UInt64 = DigitLookup(digit, FromBase) ' its numeric value
 		    If addend > FromBase - 1 Then Raise New UnsupportedFormatException
@@ -53,7 +53,11 @@ Protected Module BaseConvert
 		  If Left(Data, 1) = "&" Then literal = Left(Data, 2)
 		  Data = Replace(Data, literal, "")
 		  Dim base As Integer = BaseArray.IndexOf(Right(literal, 1))
-		  Return FromBase(Data, base)
+		  If base > -1 Then 
+		    Return FromBase(Data, base)
+		  Else
+		    Raise New UnsupportedFormatException
+		  End If
 		End Function
 	#tag EndMethod
 
@@ -76,7 +80,7 @@ Protected Module BaseConvert
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
-		Protected Function ToBase(Value As UInt64, NewBase As Integer) As String
+		Protected Function ToBase(Value As UInt64, NewBase As UInt64) As String
 		  ' Converts an UInt64 into a string representation of the number in NewBase
 		  Call DigitLookup("0", 2)
 		  If NewBase - 1 > UBound(BaseArray) Or NewBase < 2 Then Raise New OutOfBoundsException
