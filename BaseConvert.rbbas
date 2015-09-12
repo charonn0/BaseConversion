@@ -9,7 +9,7 @@ Protected Module BaseConvert
 	#tag Method, Flags = &h21
 		Private Function DigitLookup(Digit As String, Base As Integer) As UInt64
 		  Dim bound As Integer = UBound(BaseArray)
-		  If bound = -1 Then 
+		  If bound = -1 Then
 		    BaseArray = Split("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/", "")
 		    bound = UBound(BaseArray)
 		  End If
@@ -37,6 +37,7 @@ Protected Module BaseConvert
 		  For i As UInt64 = 1 To Value.Len
 		    Dim digit As String = Value.Mid(i, 1) ' the encoded digit
 		    Dim addend As UInt64 = DigitLookup(digit, FromBase) ' its numeric value
+		    If addend > FromBase - 1 Then Raise New UnsupportedFormatException
 		    Result = FromBase * Result + addend
 		  Next
 		  Return Result
@@ -45,6 +46,8 @@ Protected Module BaseConvert
 
 	#tag Method, Flags = &h1
 		Protected Function FromLiteral(Data As String) As UInt64
+		  ' Allows literals in any base up to 36 by using the first digit (in base-36) as the base
+		  ' e.g. a base-10 literal would be prefix with &A
 		  Call DigitLookup("0", 2)
 		  Dim literal As String
 		  If Left(Data, 1) = "&" Then literal = Left(Data, 2)
