@@ -19,4 +19,4 @@ The `BaseConvert.Val()` method works like `Realbasic.Val`, with the addition of 
 
 ##Limitations
 * Negative numbers are not supported. All conversions use `UInt64`.
-* Exceptionally large numbers (2^63 or greater) may not convert properly due to arithmetic overflow. 
+* Exceptionally large numbers (`&h8fffffffffffffff` or greater) will not convert properly due to arithmetic overflow. 
