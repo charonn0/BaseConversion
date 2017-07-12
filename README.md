@@ -10,13 +10,13 @@ For example, converting a numeric value into a hexadecimal (base-16) string:
 
 All conversions are performed using UNsigned integers.
 
-##Extending Val()
+## Extending Val()
 The `BaseConvert.Val()` method works like `Realbasic.Val`, with the addition of a few extra literals besides `&h`, `&o` and `&b`:
 
 * `&t`: Ternary/base-3
 * `&d`: Decimal/base-10
 * `&g`: Hexatrigesimal/base-36
 
-##Limitations
+## Limitations
 * Negative numbers are not supported. All conversions use `UInt64`.
 * Exceptionally large numbers (`&h8fffffffffffffff` or greater) will not convert properly due to arithmetic overflow. 
