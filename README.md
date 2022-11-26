@@ -3,7 +3,7 @@ This project permits conversions to and from base-10 and any base between 2 and 
 
 For example, converting a numeric value into a hexadecimal (base-16) string:
 
-```vbnet
+```realbasic
   Dim num As UInt64 = 17
   Dim hexstring As String = BaseConvert.ToBase(num, 16)
 ```
